@@ -1,6 +1,6 @@
 {
     "require": {
-        "m4/m4mvc": "^0.1.0"
+        "m4/m4mvc": "^0.3.0.2"
     },
     "autoload": {
       "psr-4": {

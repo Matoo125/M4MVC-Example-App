@@ -1,6 +1,8 @@
 <?php
 
 use m4\m4mvc\core\App;
+use m4\m4mvc\core\Module;
+use m4\m4mvc\core\Model;
 
 require_once('vendor/autoload.php');
 
@@ -11,21 +13,41 @@ $app = new App;
 
 // set your namespace
 $app->settings = [
-  'namespace' =>  'Example'
+  'namespace' =>  'Example',
+  'viewExtension' =>  'php',
+  'renderFunction' => 'render'
 ];
+
+Module::register([
+  '' => [
+    'render'  =>  'view',
+    'folder'  =>  'views'
+  ]
+]);
+
 
 // set controllers folder
 $app->paths = [
-  'controllers' =>  'controllers'
+  'controllers' =>  'controllers',
+  'model'       =>  'model',
+  'app'         =>  dirname(__FILE__),
+  'namespace'   =>  'Example'
 ];
 
-// set db connection if needed
+$app->controller = 'Todos';
+
+$sqlite_path = dirname(__FILE__) . DS . 'db.sql';
+
+Model::$adapter = 'sqlite';
 $app->db([
-  'DB_HOST'   =>  'localhost',
-  'DB_PASSWORD' =>  '',
-  'DB_NAME'   =>  'test',
-  'DB_USER'   =>  'root'
+  'path' => $sqlite_path
 ]);
+
+
+if (!file_exists('db.sql')) {
+  (new Example\Model\Todo)->install($sqlite_path);
+}
+
 
 // run the app
 $app->run();
